@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <title>TKM - Telekomunikační modul telefonních čísel a hovorů</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      color: #222;
+    }
+
+    .topbar {
+      background: #2e7d32;
+      color: white;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      padding-left: 16%;
+      font-size: 30px;
+      font-weight: bold;
+    }
+
+    .symbol {
+      color: #bdbdbd;
+      margin-right: 16px;
+      font-size: 34px;
+    }
+
+    .box {
+      background: white;
+      max-width: 1250px;
+      margin: 28px auto;
+      border-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      overflow: hidden;
+    }
+
+    .box-header {
+      padding: 22px 24px 18px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .box-header h2 {
+      margin: 0 0 10px;
+      font-size: 20px;
+    }
+
+    .box-header p {
+      margin: 0;
+      font-size: 16px;
+      color: #555;
+    }
+
+    .search-row {
+      display: flex;
+      gap: 12px;
+      padding: 24px;
+    }
+
+    input {
+      flex: 1;
+      padding: 13px 14px;
+      font-size: 18px;
+      border: 1px solid #ddd;
+      border-radius: 7px;
+    }
+
+    button {
+      background: #2e7d32;
+      color: white;
+      border: none;
+      border-radius: 7px;
+      padding: 0 24px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #256628;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="topbar">
+    <span class="symbol">§</span>
+    TKM - telekomunikační modul telefonních čísel a hovorů
+  </div>
+
+  <div class="box">
+    <div class="box-header">
+      <h2>Vyhledávání v modulu</h2>
+      <p>Hledejte podle telefonního čísla. Výsledky se zobrazí až po zadání dotazu.</p>
+    </div>
+
+    <div class="search-row">
+      <input type="text" id="userInput" placeholder="Zadejte telefonní číslo">
+      <button onclick="go()">Hledat</button>
+    </div>
+  </div>
+
+  <script>
+    function normalize(text) {
+      return text
+        .toLowerCase()
+        .replace(/\s+/g, "")
+        .trim();
+    }
+
+    function go() {
+      const val = normalize(document.getElementById("userInput").value);
+
+      const pages = {
+        "6031943788": "https://tkm-fbf72a.webnode.cz/",
+        "6031943788n": "https://tkm-fbf72a.webnode.cz/aktualizace/",
+        "2225584423": "https://tkm-fbf72a.webnode.cz/2/"
+      };
+
+      if (pages[val]) {
+        window.location.href = pages[val];
+      } else {
+        alert("Číslo nenalezeno");
+      }
+    }
+  </script>
+
+</body>
+</html>
