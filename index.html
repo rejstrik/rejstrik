@@ -5,82 +5,26 @@
   <title>Veřejný rejstřík a sbírka listin</title>
 
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      color: #222;
-    }
+    body { margin: 0; font-family: Arial, sans-serif; background: #f4f4f4; color: #222; }
+    .topbar { background: #2e7d32; color: white; height: 70px; display: flex; align-items: center; padding-left: 16%; font-size: 30px; font-weight: bold; }
+    .symbol { color: #bdbdbd; margin-right: 16px; font-size: 34px; }
+    .box { background: white; max-width: 1250px; margin: 28px auto; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); overflow: hidden; }
+    .box-header { padding: 22px 24px 18px; border-bottom: 1px solid #ddd; }
+    .box-header h2 { margin: 0 0 10px; font-size: 20px; }
+    .box-header p { margin: 0; font-size: 16px; color: #555; }
+    .search-row { display: flex; gap: 12px; padding: 24px; }
+    input { flex: 1; padding: 13px 14px; font-size: 18px; border: 1px solid #ddd; border-radius: 7px; }
+    button { background: #2e7d32; color: white; border: none; border-radius: 7px; padding: 0 24px; font-size: 18px; cursor: pointer; }
+    button:hover { background: #256628; }
 
-    .topbar {
-      background: #2e7d32;
-      color: white;
-      height: 70px;
-      display: flex;
-      align-items: center;
-      padding-left: 16%;
-      font-size: 30px;
-      font-weight: bold;
-    }
-
-    .symbol {
-      color: #bdbdbd;
-      margin-right: 16px;
-      font-size: 34px;
-    }
-
-    .box {
-      background: white;
-      max-width: 1250px;
-      margin: 28px auto;
-      border-radius: 4px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-      overflow: hidden;
-    }
-
-    .box-header {
-      padding: 22px 24px 18px;
-      border-bottom: 1px solid #ddd;
-    }
-
-    .box-header h2 {
-      margin: 0 0 10px;
-      font-size: 20px;
-    }
-
-    .box-header p {
-      margin: 0;
-      font-size: 16px;
-      color: #555;
-    }
-
-    .search-row {
-      display: flex;
-      gap: 12px;
-      padding: 24px;
-    }
-
-    input {
-      flex: 1;
-      padding: 13px 14px;
-      font-size: 18px;
-      border: 1px solid #ddd;
-      border-radius: 7px;
-    }
-
-    button {
-      background: #2e7d32;
-      color: white;
-      border: none;
-      border-radius: 7px;
-      padding: 0 24px;
-      font-size: 18px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #256628;
-    }
+    .results { display: none; padding: 0 24px 24px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 18px; }
+    th, td { text-align: left; padding: 13px 12px; border-bottom: 1px solid #ddd; font-size: 16px; }
+    th { font-size: 18px; }
+    a { color: #1b5e20; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .badge { background: #e4f3df; color: #1b5e20; border: 1px solid #b7d7a8; border-radius: 4px; padding: 4px 8px; font-size: 14px; }
+    .note { color: #555; font-size: 14px; margin-top: 12px; }
   </style>
 </head>
 
@@ -93,17 +37,43 @@
 
   <div class="box">
     <div class="box-header">
-      <h2>Vyhledávání v modulu</h2>
-      <p>Hledejte podle názvu firmy (funguje i část názvu, bez s.r.o. nebo s ním)</p>
+      <h2>Vyhledávání v rejstříku</h2>
+      <p>Hledejte podle celého jména majitele firmy nebo názvu s.r.o. Výsledky se zobrazí až po zadání dotazu.</p>
     </div>
 
     <div class="search-row">
       <input type="text" id="userInput" placeholder="Zadejte název subjektu">
-      <button onclick="go()">Hledat</button>
+      <button onclick="searchCompany()">Hledat</button>
     </div>
+
+    <div class="results" id="results"></div>
   </div>
 
   <script>
+    const companies = [
+      {
+        name: "Alfa s.r.o.",
+        ico: "25741022",
+        address: "Karlovo náměstí 18, 120 00 Praha 2",
+        status: "Aktivní",
+        url: "https://tkm-fbf72a.webnode.cz/"
+      },
+      {
+        name: "Beta Company s.r.o.",
+        ico: "12345678",
+        address: "Václavské náměstí 1, 110 00 Praha 1",
+        status: "Aktivní",
+        url: "https://tkm-fbf72a.webnode.cz/aktualizace/"
+      },
+      {
+        name: "Novák Holding s.r.o.",
+        ico: "87654321",
+        address: "Dlouhá 5, 110 00 Praha 1",
+        status: "Aktivní",
+        url: "https://tkm-fbf72a.webnode.cz/2/"
+      }
+    ];
+
     function normalize(text) {
       return text
         .toLowerCase()
@@ -113,24 +83,59 @@
         .trim();
     }
 
-    function go() {
+    function searchCompany() {
       const val = normalize(document.getElementById("userInput").value);
+      const resultsBox = document.getElementById("results");
 
-      const pages = {
-        "hovado": "https://tkm-fbf72a.webnode.cz/",
-        "betacompany": "https://tkm-fbf72a.webnode.cz/aktualizace/",
-        "novakholding": "https://tkm-fbf72a.webnode.cz/2/"
-      };
-
-      // hledání podle části názvu
-      for (let key in pages) {
-        if (key.includes(val)) {
-          window.location.href = pages[key];
-          return;
-        }
+      if (!val) {
+        resultsBox.style.display = "none";
+        resultsBox.innerHTML = "";
+        return;
       }
 
-      alert("Subjekt nenalezen");
+      const found = companies.filter(company =>
+        normalize(company.name).includes(val)
+      );
+
+      if (found.length === 0) {
+        resultsBox.style.display = "block";
+        resultsBox.innerHTML = "<p>Subjekt nenalezen.</p>";
+        return;
+      }
+
+      let html = `<p>Nalezené subjekty: <strong>${found.length}</strong></p>`;
+      html += `
+        <table>
+          <thead>
+            <tr>
+              <th>Název</th>
+              <th>IČO</th>
+              <th>Sídlo</th>
+              <th>Stav</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      found.forEach(company => {
+        html += `
+          <tr>
+            <td><a href="${company.url}">${company.name}</a></td>
+            <td>${company.ico}</td>
+            <td>${company.address}</td>
+            <td><span class="badge">${company.status}</span></td>
+          </tr>
+        `;
+      });
+
+      html += `
+          </tbody>
+        </table>
+        <p class="note">* Data v tomto vyhledávání jsou fiktivní a slouží ke hře Labyrint Zločinu: Milénium. Nejedná se o reálný obchodní rejstřík.</p>
+      `;
+
+      resultsBox.style.display = "block";
+      resultsBox.innerHTML = html;
     }
   </script>
 
