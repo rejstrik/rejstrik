@@ -94,7 +94,7 @@
   <div class="box">
     <div class="box-header">
       <h2>Vyhledávání v modulu</h2>
-      <p>Hledejte podle názvu firmy bez s.r.o. nebo s s.r.o.</p>
+      <p>Hledejte podle názvu firmy (funguje i část názvu, bez s.r.o. nebo s ním)</p>
     </div>
 
     <div class="search-row">
@@ -107,7 +107,9 @@
     function normalize(text) {
       return text
         .toLowerCase()
+        .replace(/\./g, "")
         .replace(/\s+/g, "")
+        .replace("sro", "")
         .trim();
     }
 
@@ -115,16 +117,20 @@
       const val = normalize(document.getElementById("userInput").value);
 
       const pages = {
-        "6031943788": "https://tkm-fbf72a.webnode.cz/",
-        "6031943788n": "https://tkm-fbf72a.webnode.cz/aktualizace/",
-        "2225584423": "https://tkm-fbf72a.webnode.cz/2/"
+        "hovado": "https://tkm-fbf72a.webnode.cz/",
+        "betacompany": "https://tkm-fbf72a.webnode.cz/aktualizace/",
+        "novakholding": "https://tkm-fbf72a.webnode.cz/2/"
       };
 
-      if (pages[val]) {
-        window.location.href = pages[val];
-      } else {
-        alert("Číslo nenalezeno");
+      // hledání podle části názvu
+      for (let key in pages) {
+        if (key.includes(val)) {
+          window.location.href = pages[key];
+          return;
+        }
       }
+
+      alert("Subjekt nenalezen");
     }
   </script>
 
