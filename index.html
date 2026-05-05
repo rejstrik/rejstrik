@@ -41,10 +41,11 @@
       <p>Hledejte podle názvu s.r.o. nebo jeho části. Výsledky se zobrazí až po zadání dotazu.</p>
     </div>
 
-    <div class="search-row">
+    <!-- 🔥 FORM místo DIV -->
+    <form class="search-row" onsubmit="searchCompany(); return false;">
       <input type="text" id="userInput" placeholder="Zadejte název subjektu">
-      <button onclick="searchCompany()">Hledat</button>
-    </div>
+      <button type="submit">Hledat</button>
+    </form>
 
     <div class="results" id="results"></div>
   </div>
