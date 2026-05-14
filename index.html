@@ -5,26 +5,134 @@
   <title>Veřejný rejstřík a sbírka listin</title>
 
   <style>
-    body { margin: 0; font-family: Arial, sans-serif; background: #f4f4f4; color: #222; }
-    .topbar { background: #2e7d32; color: white; height: 70px; display: flex; align-items: center; padding-left: 16%; font-size: 30px; font-weight: bold; }
-    .symbol { color: #bdbdbd; margin-right: 16px; font-size: 34px; }
-    .box { background: white; max-width: 1250px; margin: 28px auto; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); overflow: hidden; }
-    .box-header { padding: 22px 24px 18px; border-bottom: 1px solid #ddd; }
-    .box-header h2 { margin: 0 0 10px; font-size: 20px; }
-    .box-header p { margin: 0; font-size: 16px; color: #555; }
-    .search-row { display: flex; gap: 12px; padding: 24px; }
-    input { flex: 1; padding: 13px 14px; font-size: 18px; border: 1px solid #ddd; border-radius: 7px; }
-    button { background: #2e7d32; color: white; border: none; border-radius: 7px; padding: 0 24px; font-size: 18px; cursor: pointer; }
-    button:hover { background: #256628; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      color: #222;
+    }
 
-    .results { display: none; padding: 0 24px 24px; }
-    table { width: 100%; border-collapse: collapse; margin-top: 18px; }
-    th, td { text-align: left; padding: 13px 12px; border-bottom: 1px solid #ddd; font-size: 16px; }
-    th { font-size: 18px; }
-    a { color: #1b5e20; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    .badge { background: #e4f3df; color: #1b5e20; border: 1px solid #b7d7a8; border-radius: 4px; padding: 4px 8px; font-size: 14px; }
-    .note { color: #555; font-size: 14px; margin-top: 12px; }
+    .topbar {
+      background: #2e7d32;
+      color: white;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      padding-left: 16%;
+      font-size: 30px;
+      font-weight: bold;
+    }
+
+    .symbol {
+      color: #bdbdbd;
+      margin-right: 16px;
+      font-size: 34px;
+    }
+
+    .box {
+      background: white;
+      max-width: 1250px;
+      margin: 28px auto;
+      border-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      overflow: hidden;
+    }
+
+    .box-header {
+      padding: 22px 24px 18px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .box-header h2 {
+      margin: 0 0 10px;
+      font-size: 20px;
+    }
+
+    .box-header p {
+      margin: 0;
+      font-size: 16px;
+      color: #555;
+    }
+
+    .search-row {
+      display: flex;
+      gap: 12px;
+      padding: 24px;
+    }
+
+    input {
+      flex: 1;
+      padding: 13px 14px;
+      font-size: 18px;
+      border: 1px solid #ddd;
+      border-radius: 7px;
+    }
+
+    button {
+      background: #2e7d32;
+      color: white;
+      border: none;
+      border-radius: 7px;
+      padding: 0 24px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #256628;
+    }
+
+    .results {
+      display: none;
+      padding: 0 24px 24px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 18px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 13px 12px;
+      border-bottom: 1px solid #ddd;
+      font-size: 16px;
+    }
+
+    th {
+      font-size: 18px;
+    }
+
+    a {
+      color: #1b5e20;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .badge {
+      background: #e4f3df;
+      color: #1b5e20;
+      border: 1px solid #b7d7a8;
+      border-radius: 4px;
+      padding: 4px 8px;
+      font-size: 14px;
+    }
+
+    .note {
+      color: #555;
+      font-size: 14px;
+      margin-top: 12px;
+    }
+
+    .people {
+      margin-top: 5px;
+      font-size: 13px;
+      color: #666;
+    }
   </style>
 </head>
 
@@ -36,75 +144,138 @@
   </div>
 
   <div class="box">
+
     <div class="box-header">
       <h2>Vyhledávání v rejstříku</h2>
-      <p>Hledejte podle názvu s.r.o. nebo jeho části. Výsledky se zobrazí až po zadání dotazu.</p>
+      <p>
+        Vyhledávání funguje podle názvu subjektu nebo osob v něm vedených.
+        Pro hledání zadejte alespoň 3 znaky.
+      </p>
     </div>
 
-    <!-- 🔥 FORM místo DIV -->
     <form class="search-row" onsubmit="searchCompany(); return false;">
-      <input type="text" id="userInput" placeholder="Zadejte název subjektu">
+      <input
+        type="text"
+        id="userInput"
+        placeholder="Zadejte název subjektu nebo osoby">
       <button type="submit">Hledat</button>
     </form>
 
     <div class="results" id="results"></div>
+
   </div>
 
   <script>
+
     const companies = [
+
       {
         name: "CLEAN s.r.o.",
         ico: "382715946",
         address: "Korunní 1083/72, Praha 10-Vinohrady",
         status: "Aktivní",
-        url: "clean.html"
+        url: "clean.html",
+        people: [
+          "Igor Staněk",
+          "Vendula Staňková Němcová"
+        ]
       },
+
       {
         name: "Pospíšil s.r.o.",
         ico: "397227637",
         address: "Haštalská 6, Praha 1-Staré Město",
         status: "Aktivní",
-        url: "pospisil.html"
+        url: "pospisil.html",
+        people: [
+          "Václav Staněk",
+          "Lenka Pospíšilová",
+          "Zdeněk Pospíšil"
+        ]
       },
+
       {
-        name: "Novák Holding s.r.o.",
-        ico: "87654321",
-        address: "Dlouhá 5, 110 00 Praha 1",
+        name: "Klub sousedů Vršovice, z. s.",
+        ico: "-",
+        address: "Praha",
         status: "Aktivní",
-        url: "https://tkm-fbf72a.webnode.cz/2/"
+        url: "klubsousedu.html",
+        people: [
+          "Anna Křížová",
+          "Tomáš Hrdlička",
+          "Petra Malá",
+          "Jan Veselý",
+          "Klára Dvořáková",
+          "Michal Bartoš",
+          "Tereza Novotná"
+        ]
       }
+
     ];
 
+
     function normalize(text) {
+
       return text
         .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
         .replace(/\./g, "")
+        .replace(/,/g, "")
         .replace(/\s+/g, "")
         .replace("sro", "")
+        .replace("zs", "")
         .trim();
     }
 
+
     function searchCompany() {
-      const val = normalize(document.getElementById("userInput").value);
-      const resultsBox = document.getElementById("results");
 
-      if (!val) {
-        resultsBox.style.display = "none";
-        resultsBox.innerHTML = "";
-        return;
-      }
-
-      const found = companies.filter(company =>
-        normalize(company.name).includes(val)
+      const val = normalize(
+        document.getElementById("userInput").value
       );
 
-      if (found.length === 0) {
+      const resultsBox =
+        document.getElementById("results");
+
+
+      if (!val || val.length < 3) {
+
         resultsBox.style.display = "block";
-        resultsBox.innerHTML = "<p>Subjekt nenalezen.</p>";
+
+        resultsBox.innerHTML =
+          "<p>Zadejte alespoň 3 znaky.</p>";
+
         return;
       }
 
-      let html = `<p>Nalezené subjekty: <strong>${found.length}</strong></p>`;
+
+      const found = companies.filter(company => {
+
+        const searchableText = normalize(
+          company.name + " " +
+          company.people.join(" ")
+        );
+
+        return searchableText.includes(val);
+      });
+
+
+      if (found.length === 0) {
+
+        resultsBox.style.display = "block";
+
+        resultsBox.innerHTML =
+          "<p>Subjekt nenalezen.</p>";
+
+        return;
+      }
+
+
+      let html =
+        `<p>Nalezené subjekty: <strong>${found.length}</strong></p>`;
+
+
       html += `
         <table>
           <thead>
@@ -118,26 +289,53 @@
           <tbody>
       `;
 
+
       found.forEach(company => {
+
         html += `
           <tr>
-            <td><a href="${company.url}">${company.name}</a></td>
+
+            <td>
+              <a href="${company.url}">
+                ${company.name}
+              </a>
+
+              <div class="people">
+                ${company.people.join(", ")}
+              </div>
+            </td>
+
             <td>${company.ico}</td>
+
             <td>${company.address}</td>
-            <td><span class="badge">${company.status}</span></td>
+
+            <td>
+              <span class="badge">
+                ${company.status}
+              </span>
+            </td>
+
           </tr>
         `;
       });
 
+
       html += `
           </tbody>
         </table>
-        <p class="note">* Data v tomto vyhledávání jsou fiktivní a slouží ke hře. Nejedná se o reálný obchodní rejstřík.</p>
+
+        <p class="note">
+          * Data v tomto vyhledávání jsou fiktivní
+          a slouží ke hře. Nejedná se o reálný
+          obchodní rejstřík.
+        </p>
       `;
+
 
       resultsBox.style.display = "block";
       resultsBox.innerHTML = html;
     }
+
   </script>
 
 </body>
