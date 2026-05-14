@@ -127,12 +127,6 @@
       font-size: 14px;
       margin-top: 12px;
     }
-
-    .people {
-      margin-top: 5px;
-      font-size: 13px;
-      color: #666;
-    }
   </style>
 </head>
 
@@ -147,18 +141,25 @@
 
     <div class="box-header">
       <h2>Vyhledávání v rejstříku</h2>
+
       <p>
-        Vyhledávání funguje podle názvu subjektu nebo osob v něm vedených.
+        Vyhledávání funguje podle názvu subjektu
+        nebo osob v něm vedených.
         Pro hledání zadejte alespoň 3 znaky.
       </p>
     </div>
 
     <form class="search-row" onsubmit="searchCompany(); return false;">
+
       <input
         type="text"
         id="userInput"
         placeholder="Zadejte název subjektu nebo osoby">
-      <button type="submit">Hledat</button>
+
+      <button type="submit">
+        Hledat
+      </button>
+
     </form>
 
     <div class="results" id="results"></div>
@@ -286,6 +287,7 @@
               <th>Stav</th>
             </tr>
           </thead>
+
           <tbody>
       `;
 
@@ -299,10 +301,6 @@
               <a href="${company.url}">
                 ${company.name}
               </a>
-
-              <div class="people">
-                ${company.people.join(", ")}
-              </div>
             </td>
 
             <td>${company.ico}</td>
